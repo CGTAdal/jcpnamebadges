@@ -65,9 +65,12 @@ $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
 
-$db['jcpbadges']['hostname'] = 'localhost';
-$db['jcpbadges']['username'] = 'devjcp_devjcp';
-$db['jcpbadges']['password'] = 'LK~q=cg#ZoFV';
+// $db['jcpbadges']['hostname'] = 'localhost';
+// $db['jcpbadges']['username'] = 'devjcp_devjcp';
+// $db['jcpbadges']['password'] = 'LK~q=cg#ZoFV';
+$db['jcpbadges']['hostname'] = '192.168.1.173';
+$db['jcpbadges']['username'] = 'admin';
+$db['jcpbadges']['password'] = 'admin';
 $db['jcpbadges']['database'] = 'devjcp_jcpnameb_demo';
 $db['jcpbadges']['dbdriver'] = 'mysql';
 $db['jcpbadges']['dbprefix'] = 'ci_';
