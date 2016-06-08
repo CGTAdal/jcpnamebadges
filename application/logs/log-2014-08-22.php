@@ -1,0 +1,27 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+
+ERROR - 2014-08-22 14:02:37 --> Severity: Notice  --> Undefined index: cart /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 266
+ERROR - 2014-08-22 14:02:37 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:02:37 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:37 --> Severity: Notice  --> Undefined index: cart_total /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 279
+ERROR - 2014-08-22 14:02:37 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:38 --> Severity: Notice  --> Undefined index: cart /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 266
+ERROR - 2014-08-22 14:02:38 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:02:38 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:38 --> Severity: Notice  --> Undefined index: cart_total /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 279
+ERROR - 2014-08-22 14:02:38 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:51 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:02:51 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:51 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:57 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:02:57 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:57 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:58 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:02:58 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:02:58 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:03:00 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:03:00 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:03:00 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:03:02 --> Severity: Warning  --> Invalid argument supplied for foreach() /home/jcpnameb/public_html/application/modules/order/controllers/ajax.php 270
+ERROR - 2014-08-22 14:03:02 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672
+ERROR - 2014-08-22 14:03:02 --> Severity: Warning  --> Cannot modify header information - headers already sent by (output started at /home/jcpnameb/public_html/system/core/Exceptions.php:185) /home/jcpnameb/public_html/system/libraries/Session.php 672

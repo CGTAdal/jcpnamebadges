@@ -1,0 +1,107 @@
+<div class="main clb">
+	<div class="main-left fll">
+		<div class="clb shipping">
+			<h3 class="title">Shipping Address:</h3>
+			<div class="pl-20 fontGL mb-30">
+				<div>jcp store <?php echo $store->store_number;?></div>
+				<div>
+					ATTN:  <span id="attn_value"><?php echo $new_attn;?></span>
+					<span class="split"> </span>
+					<a href="javascript:void(0);" id="change_attn_link">
+						<font color="#468be9" size="-1">(Edit ATTN: Name)</font>
+					</a>
+				</div>
+				<div id="change_attn_box" class="displN">
+					<?php echo form_input('store_attn',$new_attn,'size="17" style="font-size:12px;margin:3px"');?>
+					<input type="button" value="Change" style="font-size:12px" id="change_attn"/>
+					<input type="button" value="Close" style="font-size:12px" id="close_attn_box"/>
+				</div>
+				<div><?php echo $store->store_address;?></div>
+				<div><?php echo $store->store_city.', '.$store->store_state.' '.$store->store_zip;?></div>
+			</div>
+			<h3 class="title">Order Total:</h3>
+			<div class="pl-20 fontGL mb-30">
+				<div class ="order_total"><?php echo $order_total; echo ($order_total<=1)?' Badge':' Badges';?></div>
+				<div class ="items_total" style = "display:none"></div>
+			</div>
+			<div class="txtC fontGL mb-20">Please Check Your Order One Last Time!</div>
+			<div class="txtC">
+				<input type="button" id="place_order" value="Place Order" />
+			</div>
+		</div>
+	</div>
+	<!--END main left-->
+	<?php
+	
+		$order_box = Modules::run('order/detailOrderBox');
+		echo $order_box;
+		
+	?>
+	
+	<!--END main right-->
+	<input type="hidden" id="store_id" value="<?php echo $store->store_id;?>" />
+</div>
+<!--END main-->
+<script>
+	$(document).ready(function(){
+		$('#change_attn_link').click(function(){
+			$('#change_attn_box').toggle();
+		});
+		$('#change_attn').click(function(){
+			var new_attn = $('input[name="store_attn"]');
+			if(new_attn.val()=="") {
+				alert('Please enter new ATTN');
+				new_attn.focus();
+				return false;
+			}
+			var store_id = $('#store_id').val();
+
+			$.post(
+				'<?php echo base_url();?>store/storeajax/changeATTN',
+				{new_attn: new_attn.val(), store_id: store_id},
+				function(data){
+					$('#attn_value').html(data);
+					$('#change_attn_box').hide();
+				}
+			);
+			
+		});
+		$('#close_attn_box').click(function(){
+			$('#change_attn_box').hide();
+		})
+		
+		$('#place_order').click(function(){
+			window.location="<?php echo base_url();?>order/add";
+		});
+	});
+	// Remove cart Item in function Shipping
+	$('.remove_cart_item_shipping').live('click', function (){
+		$('.order_total').hide();				
+		$('.items_total').show();
+		var parent = $(this).parent();
+		var item_id = $('#shipping_list li').index(parent);
+		$.post(
+			'<?php echo base_url();?>order/ajax/deleteItem',
+			{item_id: item_id},					
+			function(data){				
+				var size = $('#shipping_list li').size();
+				if(size-1 <= 1){	
+					$('.items_total').html(size-1+' Badge');
+				}else{
+					$('.items_total').html(size-1+' Badges');
+				}
+				if(size == 1){			
+					$('.yourOrder').hide();			
+					$('#place_order').hide();		
+					$('#continue_shipping').hide();
+					$('#continue_shipping_two').hide();
+					$('#main-left').removeClass('main-left');
+					$('#main-left').addClass('main-left-no-border');
+				}
+				parent.remove();
+			}
+		);									
+	});
+	///
+	
+</script>

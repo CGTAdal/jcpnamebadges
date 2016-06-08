@@ -1,0 +1,310 @@
+<?php 
+	//display($this->session->userdata['cart']);
+?>
+<div class = "note">	
+	<span class ="note_1">NOTE:</span> 
+	<strong>Orders ship on the 15th and 30 th of each month. Please <span class ="note_2">batch your orders to avoid additional handling fees.</span></strong>
+</div>
+<div class="main clb">
+	<div class="<?php echo (count($cart)>0)?"main-left":"main-left-no-border";?> fll" id="main-left">
+		<div class="badgeStyle overH mb-15">
+			<h3 class="title">Select Badge Style </h3>
+			<ul class="ul-main fontGL" id="badgeStyle">
+				<?php $i=0;foreach($items as $item) {?>
+					<li id="item_<?php echo $item->item_id;?>_<?php echo $item->item_type?>" class="items <?php echo ($i==0)?'badgeStyleActive-old':'';?>">
+						<a href="javascript:void(0)">
+							<span class="badgestyle-icon ">
+								<img src="<?php echo base_url().$item->item_img;?>" />
+							</span>
+							<span id="name_item_<?php echo $item->item_id;?>"><?php echo $item->item_name;?></span>
+						</a>
+					</li>
+				<?php $i=1;}?>
+			</ul>
+			<input type="hidden" id="selected_item_id" value="<?php echo $items[0]->item_id;?>"/>
+			<input type="hidden" id="selected_item_type" value="<?php echo $items[0]->item_type;?>" />
+		</div>		
+		<div id="enter-names-field">
+		</div>
+		
+	</div>
+	<!--END main left-->
+	<div class="main-right flr" style="display:<?php echo (count($cart)>0)?"block":"none";?>">		
+		<div class="yourOrder" id = "your_order">		
+			<h3 class="title">Your Order: </h3>			
+			<div class="txtC" id="continue_shipping" style="display:<?php echo (count($cart)<=0)?'none':'block';?>">
+				<input type="button" name="" value="Continue to Shipping" />
+			</div><br>			
+			<ul class="ul-main mb-30" id="cart_list">
+				<?php foreach($cart as $c) {?>
+					<li>
+						<p><strong>Style:</strong><span><?php echo $c['style'];?></span></p>
+						<?php if(isset($c['name'])) {?>
+							<p><strong >Name:</strong><span><?php echo $c['name'];?></span></p>
+						<?php }?>
+						<?php if(isset($c['title'])) {?>
+							<p><strong>Title:</strong><span><?php echo $c['title'];?></span></p>
+						<?php }?>
+						<p><strong>Fastener:</strong><span><?php echo $c['fastener'];?></span></p>
+						<?php if(isset($c['spk_spanish'])) {?>
+							<p><strong>Hablo Espanol:</strong><span><?php echo $c['spk_spanish'];?></span></p>							
+						<?php }?>
+						<a href="javascript:void(0);" class="remove_cart_item">Remove</a>
+					</li>
+				<?php }?>
+			</ul>
+			<div class ="txt_remove" id = "clear_orders">
+				<a class ="clear_orders" href="javascript:void(0);">Clears Entire Orders?</a>
+			</div>
+			<div class="txtC" id="continue_shipping_two" style="display:<?php echo (count($cart)<=0)?'none':'block';?>"><input type="button" name="" value="Continue to Shipping" /></div>
+		</div>
+	</div>
+	<!--END main right-->
+</div>
+<script>
+	$(document).ready(function(){
+		// add more name
+		$('.add-another').live('click',function(){
+			var current_input_boxes_number = $('#current_input_boxes_number').val();			
+			var type = $(this).attr('value');			
+			$.post(
+				'<?php echo base_url();?>order/ajax/addInputBox',
+				{current_input_boxes_number: current_input_boxes_number, type: type},
+				function(data) {
+					$("#input_boxes").append(data);
+					$("#current_input_boxes_number").val(parseInt(current_input_boxes_number) + 1);
+				}
+			);
+		});
+		
+		// convert first name to lower case
+		$('.first_name').live('blur',function(){
+			$(this).val($(this).val().toLowerCase());
+		});
+
+		// change field input-names
+		$(".items").click(function(){
+			$('.items').removeClass('badgeStyleActive');
+			$(this).addClass('badgeStyleActive');
+			var item	= $(this).attr('id');
+			item 		= item.split('_');
+			var id		= item[1];
+			var type 	= item[2];
+			$.post(
+				"<?php echo base_url();?>order/ajax/showNamesField",
+				{type: type},
+				function(data) {
+					$("#enter-names-field").html(data);
+				}		
+			);
+			return;
+		})
+
+		// add badges to confirm box
+		$('#add_names').live('click',function(){						
+			$('.input_box').each(function(){
+				var box_id		= $(this).attr('value');				
+				var style		= $('#style_'+box_id).val();
+				var name		= $('input[name=first_name_'+box_id+']').val();				
+				var title		= $('#title_'+box_id).val();
+				var fastener 	= $("input[name=fastener_"+box_id+"]:checked").val();
+				var spk_spanish	= $("input[name=speaks_spanish_"+box_id+"]:checked").val();
+				var new_value	= '<div class="orderConfirm mb-30">';
+				new_value		+= '<p><strong>Style:</strong><span class="badge_style">'+style+'</span></p>';
+				new_value		+= '<p><strong>Name:</strong><span class="badge_name">'+name+'</span></p>';
+				new_value		+= '<p><strong>Title:</strong><span class="badge_title">'+title+'</span></p>';
+				new_value		+= '<p><strong>Fastener:</strong><span class="badge_fastener">'+fastener+'</span></p>';
+				new_value		+= '<p><strong>Hablo Espanol:</strong><span class="badge_spk_spanish">'+spk_spanish+'</span></p></div>';
+				$('#popup_values').append(new_value);
+			});
+			
+			$(".overlay").height($(document).height());
+			$('#popup').show();
+			$("#confirm_cancel").click(function(){
+				$('.orderConfirm').remove();
+				$('#popup').hide();
+			});
+		});		
+		$('#add_generic_names').live('click',function(){
+			var count_magnetic 	= 0;
+			var count_pin		= 0;
+			$('.generic_magnetic_quantity').each(function(){
+				var style	 = "generic (no name)";
+				var name	 = $('.badge_name',$(this).parent().parent()).val();
+				var fastener = "Magnetic";
+				var quantity = parseInt($(this).val());
+				if(quantity>0) {
+					for(i=0;i<quantity;i++) {
+						var new_value	= '<div class="orderConfirm mb-30">';
+						new_value		+= '<p><strong>Style:</strong><span class="badge_style">'+style+'</span></p>';
+						new_value		+= '<p><strong>Name:</strong><span class="badge_name">'+name+'</span></p>';
+						new_value		+= '<p><strong>Fastener:</strong><span class="badge_fastener">'+fastener+'</span></p>';
+						$('#popup_values').append(new_value);
+					}
+					count_magnetic += quantity;
+				}
+			});
+			$('.generic_pin_quantity').each(function(){
+				var style	 = "generic (no name)";
+				var name	 = $('.badge_name',$(this).parent().parent()).val();
+				var fastener = "Pin";
+				var quantity = parseInt($(this).val());
+				if(quantity>0) {
+					for(i=0;i<quantity;i++) {
+						var new_value	= '<div class="orderConfirm mb-30">';
+						new_value		+= '<p><strong>Style:</strong><span class="badge_style">'+style+'</span></p>';
+						new_value		+= '<p><strong>Name:</strong><span class="badge_name">'+name+'</span></p>';
+						new_value		+= '<p><strong>Fastener:</strong><span class="badge_fastener">'+fastener+'</span></p>';
+						$('#popup_values').append(new_value);
+					}
+					count_pin += quantity;
+				}
+			});
+			if(count_magnetic + count_pin > 0) {
+				$(".overlay").height($(document).height());
+				$('#popup').show();
+				$("#confirm_cancel").click(function(){
+					$('.orderConfirm').remove();
+					$('#popup').hide();
+				});
+			} else {
+				alert('Please enter one name');
+			}
+		});
+		
+		$("#proceed").live('click',function(){
+			var order_style 		= new Array();
+			var order_name 			= new Array();
+			var order_title			= new Array();
+			var order_fastener 		= new Array();
+			var order_spk_spanish 	= new Array();
+			$('.orderConfirm').each(function(){
+				var style		= $('.badge_style',$(this)).html();
+				var name		= $('.badge_name',$(this)).html();
+				var title		= $('.badge_title',$(this)).html();
+				var fastener	= $('.badge_fastener',$(this)).html();
+				var spk_spanish	= $('.badge_spk_spanish',$(this)).html();
+				order_style.push(style);
+				order_name.push(name);
+				if(title!=null) {
+					order_title.push(title);
+				}
+				order_fastener.push(fastener);
+				if(spk_spanish!=null) {
+					order_spk_spanish.push(spk_spanish);
+				}
+			});
+			$.post(
+				"<?php echo base_url();?>order/ajax/addItemsToCart",
+				{styles:order_style, names: order_name,titles: order_title, fasteners: order_fastener, spk_spanish: order_spk_spanish},
+				function(data) {
+					var objdata = data;
+					for(i=0;i<objdata.items.length;i++) {
+						var new_item = "<li>";
+						new_item += "<p><strong>Style:</strong>"+objdata.items[i]['style']+"</p>";
+						if(objdata.items[i]['name']!==undefined) {
+							new_item += "<p><strong>Name:</strong>"+objdata.items[i]['name']+"</p>";
+						}
+						if(objdata.items[i]['title']!==undefined) {
+							new_item += "<p><strong>Title:</strong>"+objdata.items[i]['title']+"</p>";
+						}
+						if(objdata.items[i]['fastener']!==undefined) {
+							new_item += "<p><strong>Fastener:</strong>"+objdata.items[i]['fastener']+"</p>";
+						}
+						if(objdata.items[i]['spk_spanish']!==undefined) {
+							new_item += "<p><strong> Hablo Espanol:</strong>"+objdata.items[i]['spk_spanish']+"</p>";
+						}
+						new_item += "<a href='javascript:void(0);' class='remove_cart_item'>Remove</a>";
+						new_item += "</li>";
+						
+						$('#cart_list').append(new_item);
+						$('#main-left').removeClass('main-left-no-border');
+						$('#main-left').addClass('main-left');
+						//abc
+						$('#your_order').show();
+						//$('#clear_orders').show();
+						//$('#cart_list').show();			
+						$('#continue_shipping').show();
+						$('#continue_shipping_two').show();
+						$('.main-right').show();
+						$('.orderConfirm').remove();
+						$('#popup').hide();
+					}
+				},
+				'json'
+			);
+			
+		});
+		
+		$('#continue_shipping').click(function(){
+			window.location="<?php echo base_url();?>order/shipping";
+		});	
+
+		$('#continue_shipping_two').click(function(){
+			window.location="<?php echo base_url();?>order/shipping";
+		});
+		//reomove orders
+		$('.remove_cart_item').live('click', function (){
+			var parent = $(this).parent();
+			var item_id = $('#cart_list li').index(parent);
+			$.post(
+				'<?php echo base_url();?>order/ajax/deleteItem',
+				{item_id: item_id},					
+				function(data){
+					var size = $('#cart_list li').size();
+					if(size == 1){
+						$('.yourOrder').hide();						
+						$('#continue_shipping').hide();
+						$('#continue_shipping_two').hide();
+						$('#main-left').removeClass('main-left');
+						$('#main-left').addClass('main-left-no-border');
+					}
+					parent.remove();
+				}
+			);									
+		});
+		$('.remove_input_box').live('click',function(){
+			var current_input_boxes_number = $('#current_input_boxes_number').val();
+			current_input_boxes_number = current_input_boxes_number-1;
+			$('#current_input_boxes_number').val(current_input_boxes_number);
+			$(this).parent().parent().remove();			
+			var i = 1;
+			$(".input_box").each(function(){
+				if(i!=1) {
+					var h3 = jQuery(this).find("h3");
+					h3.html('Badge '+i+' <a href="javascript: void(0)" class="remove_input_box">(remove)</a>');
+				}
+				i++;
+			});
+		});
+		// Clears all Orders 
+		$('.clear_orders').live('click',function(){
+			$(".overlay").height($(document).height());
+			$('#popup2').show();
+		});
+		// Confirm Clears Orders
+		$('#confirm_Yes').live('click',function(){	
+			var parent = $('.remove_cart_item').parent();		
+			$.post(
+				"<?php echo base_url();?>order/ajax/clearOrders",
+				"",
+				function(data){
+					$('.yourOrder').hide();
+					//$('#cart_list').hide();
+					//$('#clear_orders').hide();
+					$('#continue_shipping').hide();
+					$('#continue_shipping_two').hide();
+					$('#popup').hide();
+					$('#main-left').removeClass('main-left');
+					$('#main-left').addClass('main-left-no-border');
+					$('#popup2').hide();
+					parent.remove();
+				}
+			);
+		});
+		$('#confirm_No').live('click',function(){
+			$('#popup2').hide();
+		});		
+	/////
+	});
+</script>

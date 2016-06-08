@@ -1,0 +1,9 @@
+[08-Aug-2012 05:43:18] PHP Fatal error:  Call to undefined function  setsessionvariable() in /home/jcpnameb/public_html/application/modules/order/controllers/admin/order.php on line 47
+[16-Aug-2012 03:51:26] PHP Fatal error:  Call to undefined method Store_Model::getByIdStore() in /home/jcpnameb/public_html/application/modules/store/controllers/admin/store.php on line 135
+[16-Aug-2012 03:51:43] PHP Fatal error:  Call to undefined method Store_Model::getByIdStore() in /home/jcpnameb/public_html/application/modules/store/controllers/admin/store.php on line 135
+[16-Aug-2012 03:52:11] PHP Fatal error:  Call to undefined method Store_Model::getByIdStore() in /home/jcpnameb/public_html/application/modules/store/controllers/admin/store.php on line 135
+[16-Aug-2012 03:52:23] PHP Fatal error:  Call to undefined method Store_Model::getByIdStore() in /home/jcpnameb/public_html/application/modules/store/controllers/admin/store.php on line 135
+[18-Sep-2012 05:58:28] PHP Fatal error:  Call to undefined method Order_Model::getOrderDetail() in /home/devjcp/public_html/application/modules/order/controllers/order.php on line 52
+[20-Aug-2015 02:44:36 America/Chicago] PHP Fatal error:  Call to undefined function pr() in /home/devjcp/public_html/application/modules/order/controllers/order.php on line 229
+[29-Oct-2015 00:06:27 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/devjcp/public_html/application/modules/order/views/shipping.php on line 31
+[29-Oct-2015 00:07:08 America/Chicago] PHP Parse error:  syntax error, unexpected '=' in /home/devjcp/public_html/application/modules/order/views/shipping.php on line 31
