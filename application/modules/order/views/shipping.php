@@ -21,14 +21,39 @@
 					}
 				?></div>
 				<div>
-					ATTN:  <span id="attn_value"><?php echo $new_attn;?></span>
+					ATTN:  
+					<span id="attn_value">
+						<?php 
+							$attnBlockCss = '';
+							if(strtolower($new_attn) !== 'store leader'){
+								$attnBlockCss = 'displN';
+								echo $new_attn;
+							}else{
+								$new_attn = '';
+							}
+						?>
+					</span>
 					<span class="split"> </span>
+					<?php 
+						if($new_attn != ''){
+					?>
 					<a href="javascript:void(0);" id="change_attn_link">
 						<font color="#468be9" size="-1">(Edit ATTN: Name)</font>
 					</a>
+					<?php 
+						}else{
+					?>
+					<a href="javascript:void(0);" id="change_attn_link">
+						<font color="#468be9" size="-1">(Add ATTN: Name)</font>
+					</a>
+					<?php
+						}
+					?>
 				</div>
-				<div id="change_attn_box" class="displN">
-					<?php echo form_input('store_attn',$new_attn,'size="17" id="store_attn" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');?>
+				<div id="change_attn_box" class="<?php echo $attnBlockCss; ?>">
+					<?php 
+						echo form_input('store_attn',$new_attn,'size="17" id="store_attn" maxlength="5" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');
+					?>
 					<input type="button" value="Change" style="font-size:12px" id="change_attn"/>
 					<input type="button" value="Close" style="font-size:12px" id="close_attn_box"/>
 				</div>				
@@ -179,6 +204,8 @@
 				function(data){
 					$('#attn_value').html(data);
 					$('#change_attn_box').hide();
+					$('#change_attn_link font').html("(Edit ATTN: Name)");
+
 				}
 			);			
 		});
@@ -427,4 +454,17 @@
 	});		
 	
 	});
+
+
+	$('#store_attn').keypress(function(e){
+          if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
+              return false;
+          }
+    });
+
+    $('#store_attn').keyup(function(e){
+      if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
+          return false;
+      }
+    });
 </script>
