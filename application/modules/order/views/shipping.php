@@ -54,7 +54,7 @@
 				</div>
 				<div id="change_attn_box" class="<?php echo $attnBlockCss; ?>">
 					<?php 
-						echo form_input('store_attn',$new_attn,'size="17" id="store_attn" maxlength="5" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');
+						echo form_input('store_attn',$new_attn,'size="17" id="store_attn" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');
 					?>
 					<input id="new_store_attn" type="hidden" value="<?php echo $new_attn; ?>" />
 					<input type="button" value="Change" style="font-size:12px" id="change_attn"/>
@@ -215,18 +215,6 @@
 			$('#store_aor').change(function(){
 				$('#new_store_aor').val('');
 			});
-
-			$('#store_attn').keypress(function(e){
-		          if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
-		              return false;
-		          }
-		    });
-
-		    $('#store_attn').keyup(function(e){
-		      if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
-		          return false;
-		      }
-		    });
 		<?php }?>
 
 		$("#store_aor").inputmask("999.999.999999.99999.99999.999.9999.9999999999");  //static mask		
@@ -235,25 +223,30 @@
 			$("#store_attn").focus();
 			$("#store_attn").select();
 		});
-		$('#change_attn').click(function(){
+		$('#change_attn').click(function(e){
 			var new_attn = $('input[name="store_attn"]');
-			if(new_attn.val()=="" || new_attn.val().trim() == "") {
+			var new_attn_val = new_attn.val();
+			if(new_attn.val()=="" || $.trim(new_attn_val) == "") {
 				alert('Please enter new ATTN');
 				new_attn.focus();
 				return false;
-			}
-			var store_id = $('#store_id').val();
-			$.post(
-				'<?php echo base_url();?>store/storeajax/changeATTN',
-				{new_attn: new_attn.val(), store_id: store_id},
-				function(data){
-					$('#attn_value').html(data);
-					$('#new_store_attn').val(new_attn.val());
-					$('#change_attn_box').hide();
-					$('#change_attn_link font').html("(Edit ATTN: Name)");
+			}else if(new_attn_val.length < 5){
+				alert("AATN name atleast 5 character long.");
+				return false;
+			}else{
+				var store_id = $('#store_id').val();
+				$.post('<?php echo base_url();?>store/storeajax/changeATTN',
+					{new_attn: new_attn.val(), store_id: store_id},
+					function(data){
 
-				}
-			);			
+						$('#attn_value').html(data);
+						$('#new_store_attn').val(new_attn.val());
+						$('#change_attn_box').hide();
+						$('#change_attn_link font').html("(Edit ATTN: Name)");
+
+					}
+				);
+			}
 		});
 		$('#close_attn_box').click(function(){
 			$('#change_attn_box').hide();
@@ -268,19 +261,19 @@
 				var store_attn = $('#store_attn').val();
 				var new_store_attn = $('#new_store_attn').val();
 
-				if(store_attn=='' || store_attn.trim() == '' || store_attn=='Store Leader'){
-						if(store_attn.trim() == '')
+				if(store_attn=='' || $.trim(store_attn) == '' || store_attn=='Store Leader'){
+						if($.trim(store_attn.val()) == '')
 							$('#store_attn').val('');
 
 						alert('You must enter ATTN Name','');
 						return false;				
 				}
 
-				if(new_store_attn=='' || new_store_attn.trim() == '' || new_store_attn=='Store Leader'){
+				if(new_store_attn=='' || $.trim(new_store_attn) == '' || new_store_attn=='Store Leader'){
 					alert('You need to update ATTN by clicking on "Change" button.');
 					return false;				
 				}
-				
+
 				if(store_aor=='' || store_aor=='000.000.000000.00000.00000.000.0000.0000000000'){
 						alert('You must enter Accounting String');
 						return false;				
@@ -290,9 +283,10 @@
 					alert('You need to update Accounting String by clicking on "Change" button.');
 					return false;				
 				}
+
 			<?php } ?>
 
-			if(order_customer == ''){
+			if(order_customer == '' || $.trim(order_customer) == ''){
 				alert('You must enter your name into the authorization box to continue','');				
 				$(".order_customer").focus();
 			}else{
