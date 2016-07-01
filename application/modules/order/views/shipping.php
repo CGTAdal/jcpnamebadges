@@ -20,6 +20,8 @@
 					echo "JCP Store ".$store->store_number;
 					}
 				?></div>
+
+				<?php if($store->store_number==SELECTED_STORE_NO) { ?>
 				<div>
 					ATTN:  
 					<span id="attn_value">
@@ -52,11 +54,28 @@
 				</div>
 				<div id="change_attn_box" class="<?php echo $attnBlockCss; ?>">
 					<?php 
-						echo form_input('store_attn',$new_attn,'size="17" id="store_attn" maxlength="5" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');
+						echo form_input('store_attn',$new_attn,'size="17" id="store_attn" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');
 					?>
+					<input id="new_store_attn" type="hidden" value="<?php echo $new_attn; ?>" />
 					<input type="button" value="Change" style="font-size:12px" id="change_attn"/>
+					<?php /*?>
 					<input type="button" value="Close" style="font-size:12px" id="close_attn_box"/>
-				</div>				
+					<?php */?>
+				</div>	
+				<?php }else{ ?>			
+					<div>
+						ATTN:  <span id="attn_value"><?php echo $new_attn;?></span>
+						<span class="split"> </span>
+						<a href="javascript:void(0);" id="change_attn_link">
+							<font color="#468be9" size="-1">(Edit ATTN: Name)</font>
+						</a>
+					</div>
+					<div id="change_attn_box" class="displN">
+						<?php echo form_input('store_attn',$new_attn,'size="17" id="store_attn" placeholder="ATTN:Name" style="font-size:12px;margin:3px"');?>
+						<input type="button" value="Change" style="font-size:12px" id="change_attn"/>
+						<input type="button" value="Close" style="font-size:12px" id="close_attn_box"/>
+					</div>
+				<?php }?>
 				<div><span id="add_value"><?php echo $new_add;?></span>
 					<?php if($store->store_number==SELECTED_STORE_NO) { ?>
 						<span class="split"> </span>
@@ -85,8 +104,11 @@
 						<span id="aor_value"><?php echo $new_aor;?></span></div>
 						<div id="change_add_aor" class="displN">
 							<?php echo form_input('store_aor',$new_aor,'size="57" id="store_aor" placeholder="Accounting String" style="font-size:12px;margin:3px"');?>
+							<input id="new_store_aor" type="hidden" value="<?php echo $new_aor; ?>" />
 							<input type="button" value="Change" style="font-size:12px" id="change_aor"/>
+							<?php /*?>
 							<input type="button" value="Close" style="font-size:12px" id="close_aor_box"/>
+							<?php */?>
 						</div>	
 				<?php } ?>
 			</div>
@@ -184,49 +206,107 @@
 <!--END main-->
 <script>
 	$(document).ready(function(){		
+
+		<?php if($store->store_number==SELECTED_STORE_NO) { ?>
+			$('#store_attn').change(function(){
+				$('#new_store_attn').val('');
+			});
+
+			$('#store_aor').change(function(){
+				$('#new_store_aor').val('');
+			});
+
+			/*$('#store_attn').blur(function(){
+				  if($(this).val().length < 5){
+				  	 alert("AATN name atleast 5 character long.");
+				  	 return false;
+				  }
+			});*/
+
+			/*$('#store_attn').keypress(function(e){
+		          if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
+		              return false;
+		          }
+		    });
+
+		    $('#store_attn').keyup(function(e){
+		      if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
+		          return false;
+		      }
+		    });*/
+		<?php }?>
+
 		$("#store_aor").inputmask("999.999.999999.99999.99999.999.9999.9999999999");  //static mask		
 		$('#change_attn_link').click(function(){
 			$('#change_attn_box').toggle();
 			$("#store_attn").focus();
 			$("#store_attn").select();
 		});
-		$('#change_attn').click(function(){
+		$('#change_attn').click(function(e){
 			var new_attn = $('input[name="store_attn"]');
-			if(new_attn.val()=="") {
+			var new_attn_val = new_attn.val();
+			if(new_attn.val()=="" || $.trim(new_attn_val) == "") {
 				alert('Please enter new ATTN');
 				new_attn.focus();
 				return false;
-			}
-			var store_id = $('#store_id').val();
-			$.post(
-				'<?php echo base_url();?>store/storeajax/changeATTN',
-				{new_attn: new_attn.val(), store_id: store_id},
-				function(data){
-					$('#attn_value').html(data);
-					$('#change_attn_box').hide();
-					$('#change_attn_link font').html("(Edit ATTN: Name)");
+			}else if(new_attn_val.length < 5){
+				alert("AATN name atleast 5 character long.");
+				return false;
+			}else{
+				var store_id = $('#store_id').val();
+				$.post('<?php echo base_url();?>store/storeajax/changeATTN',
+					{new_attn: new_attn.val(), store_id: store_id},
+					function(data){
 
-				}
-			);			
+						$('#attn_value').html(data);
+						$('#new_store_attn').val(new_attn.val());
+						$('#change_attn_box').hide();
+						$('#change_attn_link font').html("(Edit ATTN: Name)");
+
+					}
+				);
+			}
+
 		});
 		$('#close_attn_box').click(function(){
 			$('#change_attn_box').hide();
 		})		
 		$('#place_order').click(function(){	
 			var order_customer = $('.order_customer').val();
+			
 			<?php if($store->store_number==SELECTED_STORE_NO) { ?>
 				var store_aor = $('#store_aor').val();
+				var new_store_aor = $('#new_store_aor').val();
+
 				var store_attn = $('#store_attn').val();
-				if(store_attn=='' || store_attn=='Store Leader'){
-					alert('You must enter ATTN Name','');
+				var new_store_attn = $('#new_store_attn').val();
+
+				if(store_attn=='' || $.trim(store_attn) == '' || store_attn=='Store Leader'){
+						if($.trim(store_attn.val()) == '')
+							$('#store_attn').val('');
+
+						alert('You must enter ATTN Name','');
+						return false;				
+				}
+
+				if(new_store_attn=='' || $.trim(new_store_attn) == '' || new_store_attn=='Store Leader'){
+					alert('You need to update ATTN by clicking on "Change" button.');
 					return false;				
-				}		
+				}
+
 				if(store_aor=='' || store_aor=='000.000.000000.00000.00000.000.0000.0000000000'){
-					alert('You must enter Accounting String','');
+						alert('You must enter Accounting String');
+						return false;				
+				}
+
+				if(new_store_aor=='' || new_store_aor=='000.000.000000.00000.00000.000.0000.0000000000'){	
+					alert('You need to update Accounting String by clicking on "Change" button.');
 					return false;				
-				}		
+				}
+
 			<?php } ?>
-			if(order_customer == ''){
+
+			if(order_customer == '' || $.trim(order_customer) == ''){
 				alert('You must enter your name into the authorization box to continue','');				
 				$(".order_customer").focus();
 			}else{
@@ -326,6 +406,7 @@
 				{new_aor: new_aor.val(), store_id: store_id},
 				function(data){
 					$('#aor_value').html(data);
+					$('#new_store_aor').val(new_aor.val());
 					$('#change_add_aor').hide();
 				}
 			);			
@@ -455,16 +536,4 @@
 	
 	});
 
-
-	$('#store_attn').keypress(function(e){
-          if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
-              return false;
-          }
-    });
-
-    $('#store_attn').keyup(function(e){
-      if(this.value.length > 4 &&  e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39){
-          return false;
-      }
-    });
 </script>
